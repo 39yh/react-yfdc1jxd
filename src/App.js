@@ -566,7 +566,7 @@ export default function App() {
       display:"flex", flexDirection:"column", alignItems:"center",
       justifyContent:"flex-start",
       padding:mode==="quiz"
-        ? "calc(env(safe-area-inset-top, 0px) + 26px) 16px 28px"
+        ? "calc(env(safe-area-inset-top, 0px) + clamp(90px, 18vh, 170px)) 16px 32px"
         : "calc(env(safe-area-inset-top, 0px) + 42px) 16px 28px",
       position:"relative", overflow:"hidden" }}>
       <style>{`
