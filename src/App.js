@@ -563,12 +563,12 @@ export default function App() {
               <p style={{color:"#8888AA",fontSize:12,fontWeight:600}}>語尾を見た瞬間に品詞を答えろ！</p>
             </div>
 
-            <div style={{display:"flex",gap:8,marginBottom:18,justifyContent:"center",flexWrap:"wrap"}}>
+            <div className="pos-overview">
               {Object.entries(POS_CONFIG).map(([pos,cfg]) => (
-                <div key={pos} style={{background:"#fff",borderRadius:13,padding:"7px 13px",boxShadow:"0 2px 10px #0000000D",display:"flex",alignItems:"center",gap:6}}>
-                  <span style={{fontSize:15}}>{cfg.emoji}</span>
-                  <span style={{fontSize:13,fontWeight:800,color:"#1A1A2E"}}>{pos}</span>
-                  <span style={{fontSize:10,color:"#AAAACC",fontWeight:600}}>{cfg.sub}</span>
+                <div key={pos} className="pos-overview-item">
+                  <span className="pos-overview-emoji">{cfg.emoji}</span>
+                  <span className="pos-overview-name">{pos}</span>
+                  <span className="pos-overview-sub">{cfg.sub}</span>
                 </div>
               ))}
             </div>
@@ -590,16 +590,16 @@ export default function App() {
               </div>
               <div>
                 <div style={{fontSize:12,fontWeight:700,color:"#555570",marginBottom:6}}>品詞フィルター</div>
-                <div style={{display:"flex",gap:6,flexWrap:"wrap"}}>
+                <div className="pos-filter-grid">
                   {["全て",...Object.keys(POS_CONFIG)].map(p => {
                     const cfg = POS_CONFIG[p];
                     return (
-                      <button key={p} className="btn" onClick={()=>setQFilter(p)} style={{
-                        padding:"6px 12px", borderRadius:9, fontSize:12, fontWeight:800,
+                      <button key={p} className="btn pos-filter-button" onClick={()=>setQFilter(p)} style={{
+                        borderRadius:9, fontWeight:800,
                         background:qFilter===p?(cfg?.hue||"#1A1A2E"):"#F4F4FA",
                         color:qFilter===p?"#fff":"#8888AA",
                         boxShadow:qFilter===p?`0 3px 10px ${cfg?.hue||"#333"}55`:"none",
-                      }}>{cfg?`${cfg.emoji} ${p}`:"🌐 全て"}</button>
+                      }}><span className="pos-filter-emoji">{cfg?.emoji || "🌐"}</span><span>{p}</span></button>
                     );
                   })}
                 </div>

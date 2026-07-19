@@ -9,3 +9,56 @@ html, body, #root {
   margin: 0;
   padding: 0;
 }
+
+.pos-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.pos-overview-item {
+  min-width: 0;
+  min-height: 43px;
+  padding: 7px 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  overflow: hidden;
+  white-space: nowrap;
+  background: #fff;
+  border-radius: 13px;
+  box-shadow: 0 2px 10px #0000000d;
+}
+
+.pos-overview-emoji { flex: 0 0 auto; font-size: 15px; }
+.pos-overview-name { flex: 0 0 auto; color: #1a1a2e; font-size: 13px; font-weight: 800; }
+.pos-overview-sub { min-width: 0; color: #aaaacc; font-size: 10px; font-weight: 600; }
+
+.pos-filter-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 5px;
+}
+
+.pos-filter-button {
+  min-width: 0;
+  padding: 7px 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+.pos-filter-emoji { font-size: 12px; }
+
+@media (max-width: 370px) {
+  .pos-overview { gap: 5px; }
+  .pos-overview-item { gap: 3px; padding-inline: 4px; }
+  .pos-overview-sub { display: none; }
+  .pos-filter-button { gap: 1px; font-size: 10px; }
+  .pos-filter-emoji { font-size: 10px; }
+}
