@@ -408,6 +408,25 @@ const ALL_WORDS = SUFFIX_DATA.flatMap(s =>
   s.words.map(w => ({ ...w, suffix: s.suffix, pos: s.pos, posEn: s.posEn, hue: s.hue }))
 );
 
+// 単独表示では品詞を一意に決められない語は、クイズから除外して
+// 意味と用法を確認できるフラッシュカードにのみ残す。
+const MULTI_POS_WORDS = new Set([
+  // 名詞／動詞、名詞／形容詞
+  "commission", "distance", "document", "emergency", "experience", "influence",
+  "majority", "position", "quality", "reference", "specialist",
+  // 動詞／名詞・形容詞
+  "coordinate", "estimate", "incorporate",
+  // 形容詞／名詞
+  "annual", "automatic", "commercial", "creative", "critical", "domestic",
+  "exclusive", "local", "official", "optional", "personal", "professional",
+  "representative", "seasonal", "special", "specific", "valuable", "wireless",
+  // 形容詞用法／動詞の分詞
+  "advanced", "challenging", "dedicated", "demanding", "detailed", "established",
+  "experienced", "existing", "leading", "limited", "promising", "qualified",
+  "remaining", "rewarding", "satisfied"
+]);
+const QUIZ_WORDS = ALL_WORDS.filter(w => !MULTI_POS_WORDS.has(w.word));
+
 const POS_CONFIG = {
   "名詞":  { sub: "Noun", hue: "#FF5C87", emoji: "📦", light: "#FFF0F4" },
   "動詞":  { sub: "Verb", hue: "#FFB800", emoji: "⚡", light: "#FFFBEA" },
@@ -505,7 +524,7 @@ export default function App() {
   const cw = cg?.words[fCard];
 
   const startQuiz = () => {
-    const pool = qFilter === "全て" ? ALL_WORDS : ALL_WORDS.filter(w => w.pos === qFilter);
+    const pool = qFilter === "全て" ? QUIZ_WORDS : QUIZ_WORDS.filter(w => w.pos === qFilter);
     const w = shuffle(pool).slice(0, qCount);
     setWords(w); setQi(0); setScore(0); setCombo(0); setMaxCombo(0);
     setResults([]); setSelected(null); setPhase("question");
@@ -647,6 +666,9 @@ export default function App() {
             <p style={{textAlign:"center",color:"#CCCCDD",fontSize:11,fontWeight:600,marginTop:11}}>
               全 {ALL_WORDS.length} 単語収録 · 語尾 {SUFFIX_DATA.length} パターン
             </p>
+            <p style={{textAlign:"center",color:"#B8B8C9",fontSize:10,fontWeight:600,marginTop:4,lineHeight:1.55}}>
+              ※複数の品詞を持つ単語はクイズから除外しています
+            </p>
             <button className="btn" onClick={shareApp} aria-label="品詞スナイパーを共有する" style={{
               display:"block", margin:"7px auto 0", padding:"8px 14px", background:"transparent",
               color:"#AAAACC", fontSize:11, fontWeight:700, letterSpacing:".04em"
@@ -783,9 +805,11 @@ export default function App() {
                 transition:"border .2s,box-shadow .2s",
               }}>
                 <div style={{fontFamily:"'Nunito',sans-serif",fontSize:26,fontWeight:900,color:"#1A1A2E",letterSpacing:"-.02em"}}>{cur.word}</div>
-                <div className={phase==="reveal"?"reveal":""} style={{marginTop:4,fontSize:12,fontWeight:700,color:"#8888AA"}}>
-                  この意味で判定：{cur.meaning}
-                </div>
+                {phase==="reveal"&&(
+                  <div className="reveal" style={{marginTop:4,fontSize:12,fontWeight:700,color:"#8888AA"}}>
+                    意味：{cur.meaning}
+                  </div>
+                )}
               </div>
             </div>
 
