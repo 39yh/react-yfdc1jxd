@@ -795,7 +795,8 @@ export default function App() {
                 </div>
               )}
               <div className={phase==="reveal"?(isCorrect?"pop":"shake"):"flip"} key={qi+phase} style={{
-                flex:1, background:"#fff", borderRadius:18, padding:"16px 18px",
+                flex:1, height:118, background:"#fff", borderRadius:18, padding:"14px 18px",
+                display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", textAlign:"center",
                 boxShadow:phase==="reveal"
                   ? isCorrect?"0 6px 26px #00C9A755":"0 6px 26px #FF5C8755"
                   : "0 4px 16px #0000000E",
@@ -806,8 +807,9 @@ export default function App() {
               }}>
                 <div style={{fontFamily:"'Nunito',sans-serif",fontSize:26,fontWeight:900,color:"#1A1A2E",letterSpacing:"-.02em"}}>{cur.word}</div>
                 {phase==="reveal"&&(
-                  <div className="reveal" style={{marginTop:4,fontSize:12,fontWeight:700,color:"#8888AA"}}>
-                    意味：{cur.meaning}
+                  <div className="reveal" style={{marginTop:8,display:"flex",alignItems:"center",justifyContent:"center",gap:10,flexWrap:"wrap"}}>
+                    <div style={{fontSize:17,fontWeight:900,color:"#45455F",lineHeight:1.35}}>{cur.meaning}</div>
+                    <PosTag pos={cur.pos} size="md"/>
                   </div>
                 )}
               </div>
@@ -856,53 +858,13 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Explanation box */}
+                  {/* Point */}
                   <div style={{background:"rgba(255,255,255,.18)",borderRadius:13,padding:"11px 13px"}}>
-                    <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.65)",letterSpacing:".1em",marginBottom:6,textTransform:"uppercase"}}>この意味・用法での解答</div>
-                    <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
-                      <div>
-                        <span style={{fontFamily:"'Nunito',sans-serif",fontSize:21,fontWeight:900,color:"#fff"}}>{cur.word}</span>
-                        <span style={{fontSize:13,color:"rgba(255,255,255,.75)",marginLeft:7,fontWeight:600}}>「{cur.meaning}」</span>
-                      </div>
-                      <div style={{display:"flex",flexDirection:"column",alignItems:"flex-end",gap:5}}>
-                        <div style={{background:"rgba(255,255,255,.25)",borderRadius:7,padding:"3px 10px",fontSize:12,fontWeight:800,color:"#fff"}}>
-                          語尾：{cur.suffix}
-                        </div>
-                        <div style={{background:"#fff",borderRadius:8,padding:"4px 11px",display:"inline-flex",alignItems:"center",gap:5}}>
-                          <span style={{fontSize:13}}>{POS_CONFIG[cur.pos]?.emoji}</span>
-                          <span style={{fontSize:14,fontWeight:900,color:POS_CONFIG[cur.pos]?.hue}}>{cur.pos}</span>
-                          <span style={{fontSize:11,color:"#AAAACC",fontWeight:600}}>({cur.posEn})</span>
-                        </div>
-                      </div>
+                    <div style={{fontSize:10,fontWeight:800,color:"rgba(255,255,255,.68)",letterSpacing:".12em",marginBottom:5}}>POINT</div>
+                    <div style={{fontSize:17,fontWeight:900,color:"#fff",lineHeight:1.4}}>
+                      語尾 {cur.suffix} → {cur.pos}
                     </div>
                   </div>
-                </div>
-
-                {/* 4 choices recap */}
-                <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8,marginBottom:13}}>
-                  {Object.entries(POS_CONFIG).map(([pos,cfg])=>{
-                    const isAns = pos===cur.pos;
-                    const isWrong = pos===selected&&!isAns;
-                    return (
-                      <div key={pos} style={{
-                        borderRadius:13, padding:"11px 10px",
-                        background:isAns?cfg.hue:isWrong?"#FFF0F3":"#F8F8FC",
-                        border:`2.5px solid ${isAns?cfg.hue:isWrong?"#FF5C87":"#F0F0FA"}`,
-                        display:"flex", alignItems:"center", gap:8,
-                        boxShadow:isAns?`0 4px 16px ${cfg.hue}55`:"none",
-                        opacity:(!isAns&&!isWrong)?.5:1,
-                      }}>
-                        <span style={{fontSize:18}}>{cfg.emoji}</span>
-                        <div>
-                          <div style={{fontFamily:"'Nunito',sans-serif",fontWeight:900,fontSize:14,
-                            color:isAns?"#fff":isWrong?"#FF5C87":"#8888AA"}}>{pos}</div>
-                          <div style={{fontSize:9,fontWeight:600,color:isAns?"rgba(255,255,255,.7)":"#CCCCDD"}}>{cfg.sub}</div>
-                        </div>
-                        {isAns&&<span style={{marginLeft:"auto",fontSize:16,color:"#fff",fontWeight:900}}>✓</span>}
-                        {isWrong&&<span style={{marginLeft:"auto",fontSize:16,color:"#FF5C87"}}>✗</span>}
-                      </div>
-                    );
-                  })}
                 </div>
 
                 {/* Next button */}
