@@ -328,7 +328,6 @@ const SUFFIX_DATA = [
     { word: "critical", meaning: "重要な・批判的な" },
   ]},
   { suffix: "-less", pos: "形容詞", posEn: "Adj", hue: "#00C9A7", words: [
-    { word: "regardless", meaning: "〜にかかわらず" },
     { word: "flawless", meaning: "完璧な" },
     { word: "effortless", meaning: "楽な" },
     { word: "countless", meaning: "無数の" },
@@ -368,6 +367,9 @@ const SUFFIX_DATA = [
   ]},
 
   // ══ 副詞 ══
+  { suffix: "例外（-less）", pos: "副詞", posEn: "Adv", hue: "#845EF7", words: [
+    { word: "regardless", meaning: "〜にかかわらず・それでも" },
+  ]},
   { suffix: "-ly (副詞)", pos: "副詞", posEn: "Adv", hue: "#845EF7", words: [
     { word: "recently", meaning: "最近" },
     { word: "currently", meaning: "現在" },
@@ -477,6 +479,26 @@ export default function App() {
   const [timerOn, setTimerOn] = useState(false);
   const [combo, setCombo] = useState(0);
   const [maxCombo, setMaxCombo] = useState(0);
+  const [shareCopied, setShareCopied] = useState(false);
+
+  const shareApp = async () => {
+    const shareData = {
+      title: "品詞スナイパー",
+      text: "語尾を見た瞬間に品詞を答えるTOEIC千本ノック",
+      url: "https://part-of-speech-sniper.vercel.app/"
+    };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+        return;
+      }
+      await navigator.clipboard.writeText(shareData.url);
+      setShareCopied(true);
+      setTimeout(() => setShareCopied(false), 1800);
+    } catch (error) {
+      if (error.name !== "AbortError") window.prompt("このURLをコピーしてください", shareData.url);
+    }
+  };
 
   const filteredGroups = fFilter === "全て" ? SUFFIX_DATA : SUFFIX_DATA.filter(s => s.pos === fFilter);
   const cg = filteredGroups[Math.min(fGroup, filteredGroups.length - 1)] || filteredGroups[0];
@@ -523,8 +545,10 @@ export default function App() {
     <div style={{ minHeight:"100vh", background:"linear-gradient(160deg,#FFF7FB 0%,#F0F4FF 50%,#F5FFF9 100%)",
       fontFamily:"'Nunito','Noto Sans JP',sans-serif",
       display:"flex", flexDirection:"column", alignItems:"center",
-      justifyContent:mode==="quiz"?"flex-start":"center",
-      padding:mode==="quiz"?"16px 16px 28px":"20px 16px",
+      justifyContent:"flex-start",
+      padding:mode==="quiz"
+        ? "calc(env(safe-area-inset-top, 0px) + 26px) 16px 28px"
+        : "calc(env(safe-area-inset-top, 0px) + 42px) 16px 28px",
       position:"relative", overflow:"hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;700;900&display=swap');
@@ -623,6 +647,10 @@ export default function App() {
             <p style={{textAlign:"center",color:"#CCCCDD",fontSize:11,fontWeight:600,marginTop:11}}>
               全 {ALL_WORDS.length} 単語収録 · 語尾 {SUFFIX_DATA.length} パターン
             </p>
+            <button className="btn" onClick={shareApp} aria-label="品詞スナイパーを共有する" style={{
+              display:"block", margin:"7px auto 0", padding:"8px 14px", background:"transparent",
+              color:"#AAAACC", fontSize:11, fontWeight:700, letterSpacing:".04em"
+            }}>{shareCopied ? "✓ URLをコピーしました" : "↗ 共有する"}</button>
           </div>
         )}
 
@@ -755,11 +783,9 @@ export default function App() {
                 transition:"border .2s,box-shadow .2s",
               }}>
                 <div style={{fontFamily:"'Nunito',sans-serif",fontSize:26,fontWeight:900,color:"#1A1A2E",letterSpacing:"-.02em"}}>{cur.word}</div>
-                {phase==="reveal"&&(
-                  <div className="reveal" style={{marginTop:4,fontSize:12,fontWeight:700,color:"#8888AA"}}>
-                    意味：{cur.meaning}
-                  </div>
-                )}
+                <div className={phase==="reveal"?"reveal":""} style={{marginTop:4,fontSize:12,fontWeight:700,color:"#8888AA"}}>
+                  この意味で判定：{cur.meaning}
+                </div>
               </div>
             </div>
 
@@ -808,7 +834,7 @@ export default function App() {
 
                   {/* Explanation box */}
                   <div style={{background:"rgba(255,255,255,.18)",borderRadius:13,padding:"11px 13px"}}>
-                    <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.65)",letterSpacing:".1em",marginBottom:6,textTransform:"uppercase"}}>解答</div>
+                    <div style={{fontSize:10,fontWeight:700,color:"rgba(255,255,255,.65)",letterSpacing:".1em",marginBottom:6,textTransform:"uppercase"}}>この意味・用法での解答</div>
                     <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",flexWrap:"wrap",gap:8}}>
                       <div>
                         <span style={{fontFamily:"'Nunito',sans-serif",fontSize:21,fontWeight:900,color:"#fff"}}>{cur.word}</span>
