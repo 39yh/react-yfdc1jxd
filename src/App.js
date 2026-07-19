@@ -522,8 +522,10 @@ export default function App() {
   return (
     <div style={{ minHeight:"100vh", background:"linear-gradient(160deg,#FFF7FB 0%,#F0F4FF 50%,#F5FFF9 100%)",
       fontFamily:"'Nunito','Noto Sans JP',sans-serif",
-      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center",
-      padding:"20px 16px", position:"relative", overflow:"hidden" }}>
+      display:"flex", flexDirection:"column", alignItems:"center",
+      justifyContent:mode==="quiz"?"flex-start":"center",
+      padding:mode==="quiz"?"16px 16px 28px":"20px 16px",
+      position:"relative", overflow:"hidden" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Noto+Sans+JP:wght@400;700;900&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
